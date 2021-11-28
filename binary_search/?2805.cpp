@@ -1,37 +1,44 @@
 // 나무 자르기
 
-#include <cstdio>
-#include <vector>
-#include <algorithm>
+#include <iostream>
 
 using namespace std;
 
-int main(void){
-    int N, M, H = 0;
-    sacnf("%d %d", &N, &M);
+long long trees[1000001];
 
-    vector<int> tree_list(N);
-    for(int i=0; i<N; i++) {
-        scanf("%d",&tree_list[i]);
-    }
+int N;
+long long M;
 
-    int left = 0, right = N;
+bool isPossible(unsigned int height) {
+	unsigned int taken = 0;
+	for (int i = 0; i < N; i++) {
+		if (trees[i] >= height)
+			taken += (trees[i] - height);
+		if (taken >= M) return true;
+	}
+	return false;
+}
 
-    sort(tree_list.begin(),tree_list.end());
+int solve() {
+	unsigned int left = 0, right = 1000000000;
+	unsigned int mid,ret;
+	while (left <= right) {
+		mid = (left + right) / 2;
+		if (isPossible(mid)) {
+			ret = mid;
+			left = mid + 1;
+		}
+		else {
+			right = mid - 1;
+		}
+	}
+	return ret;
+}
+int main() {
+	scanf("%d %lld", &N, &M);
+    
+	for (int i = 0; i < N; i++)
+        scanf("%lld",&trees[i]);
 
-    while(left <= right) {
-        int mid = (left + right) / 2;
-        if(/*자르고 나은 길이의 합*/ > M)
-            right = mid - 1;
-        else if(/*자르고 나은 길이의 합*/ < M)
-            left = mid + 1;
-        else {
-            H = mid;
-            break;
-        }
-    }
-
-    // 처음일때와 끝일때는 일반적인 케이스가 아니기 때문에 따로 처리해준다
-
-    printf("%d\n",H);
+    printf("%d\n",solve());
 }
