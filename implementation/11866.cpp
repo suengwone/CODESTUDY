@@ -1,3 +1,5 @@
+// 요세푸스 문제 0
+
 #include <iostream>
 #include <vector>
 
