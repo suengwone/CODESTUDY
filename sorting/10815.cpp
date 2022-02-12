@@ -1,5 +1,5 @@
 #include <iostream>
-#include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
@@ -7,14 +7,14 @@ int main(void) {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 	int N, M, num;
-	unordered_map<int, int> cardList;
+	unordered_set<int> cardList;
 
 	cin >> N;
 
 	for (int i = 0; i < N; i++) {
 		cin >> num;
 		if (cardList.find(num) == cardList.end()) {
-			cardList[num] = 1;
+			cardList.insert(num);
 		}
 	}
 
@@ -24,7 +24,7 @@ int main(void) {
 		cin >> num;
 
 		if (cardList.find(num) != cardList.end()) {
-			cout << cardList[num]<<" ";
+			cout << "1 ";
 		}
 		else {
 			cout << "0 ";
