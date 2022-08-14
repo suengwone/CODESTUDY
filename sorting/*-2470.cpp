@@ -6,9 +6,9 @@
 
 using namespace std;
 
+// 2022.02.15 첫번째 풀이
 int N, result = 2000000000;
 
-// 2022.02.15
 int main(void) {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
@@ -49,7 +49,7 @@ int main(void) {
 	cout << res_idx_1 << " " << res_idx_2 << '\n';
 }
 
-// 2022.08.07
+// 2022.08.07 두번째 풀이
 int main()
 {
     ios_base::sync_with_stdio(false);
