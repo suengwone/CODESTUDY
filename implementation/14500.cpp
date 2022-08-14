@@ -1,4 +1,4 @@
-// 테트로미노 1번째 풀이
+// 테트로미노 1번째 풀이 dfs
 
 #include <iostream>
 #include <vector>
@@ -81,7 +81,7 @@ int main(void) {
 }
 
 
-// 테트로미노 2번째 
+// 테트로미노 2번째 재귀
 
 #include <iostream>
 #include <vector>
