@@ -1,4 +1,4 @@
-// 테트로미노
+// 테트로미노 1번째 풀이
 
 #include <iostream>
 #include <vector>
@@ -78,4 +78,135 @@ int main(void) {
     }
 
     cout << Max_value << '\n';
+}
+
+
+// 테트로미노 2번째 
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector< vector<int> > arr;
+int MaxValue = 0;
+int N,M;
+
+pair<int,int> PairMinus(pair<int,int> _A, pair<int,int> _B)
+{
+    return pair<int,int>(_A.first - _B.first, _A.second - _B.second);
+}
+
+void FindMaxValue(int col, int row, int cur_value, int count, vector< pair<int,int> > check)
+{
+    check[count] = pair<int,int>(col,row);
+
+    if(count == 4)
+    {
+        if(MaxValue < cur_value)
+        {
+            MaxValue = cur_value;
+        }
+        return;
+    }
+
+    if(count == 1)
+    {
+        if(col + 1 < N)
+        {
+            FindMaxValue(col + 1, row, cur_value + arr[col+1][row],count+1,check);
+        }
+        if(col - 1 >= 0)
+        {
+            FindMaxValue(col - 1, row, cur_value + arr[col-1][row],count+1,check);
+        }
+        if(row + 1 < M)
+        {
+            FindMaxValue(col, row + 1, cur_value + arr[col][row+1],count+1,check);
+        }
+        if(row - 1 >= 0)
+        {
+            FindMaxValue(col, row - 1, cur_value + arr[col][row-1],count+1,check);
+        }
+    }
+    else
+    {
+        if(col + 1 < N && col + 1 != check[count-1].first)
+        {
+            FindMaxValue(col + 1, row, cur_value + arr[col+1][row],count+1,check);
+        }
+        if(col - 1 >= 0 && col - 1 != check[count-1].first)
+        {
+            FindMaxValue(col - 1, row, cur_value + arr[col-1][row],count+1,check);
+        }
+        if(row + 1 < M && row + 1 != check[count-1].second)
+        {
+            FindMaxValue(col, row + 1, cur_value + arr[col][row+1],count+1,check);
+        }
+        if(row - 1 >= 0 && row - 1 != check[count-1].second)
+        {
+            FindMaxValue(col, row - 1, cur_value + arr[col][row-1],count+1,check);
+        }
+        
+        // 세번째는 3방향 가능 및 대각선 가능
+        if(count == 3)
+        {
+            pair<int,int> tempPos = PairMinus(check[count], check[count-1]);
+
+            if(tempPos.first != 0)
+            {
+                if(row + 1 < M && check[count-2].second != row+1)
+                {
+                    FindMaxValue(check[count-1].first, row + 1, cur_value + arr[check[count-1].first][row+1],count+1,check);
+                }
+                if(row - 1 >= 0 && check[count-2].second != row-1)
+                {
+                    FindMaxValue(check[count-1].first, row - 1, cur_value + arr[check[count-1].first][row-1],count+1,check);
+                }
+            }
+            else
+            {
+                if(col + 1 < N && check[count-2].first != col+1)
+                {
+                    FindMaxValue(col + 1, check[count-1].second, cur_value + arr[col+1][check[count-1].second],count+1,check);
+                }
+                if(col - 1 >= 0 && check[count-2].first != col-1)
+                {
+                    FindMaxValue(col - 1, check[count-1].second, cur_value + arr[col-1][check[count-1].second],count+1,check);
+                }
+            }
+        }
+    }
+}
+
+
+int main()
+{
+    ios_base :: sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+
+    cin >> N >> M;
+
+    arr = vector< vector<int> >(N,vector<int>(M));
+    vector< pair<int,int> > check = vector< pair<int,int> >(4);
+
+    for(int i=0; i<N; i++)
+    {
+        for(int j=0; j<M; j++)
+        {
+            cin >> arr[i][j];
+        }
+    }
+
+    for(int i=0; i<N; i++)
+    {
+        for(int j=0; j<M; j++)
+        {
+            FindMaxValue(i, j, arr[i][j], 1, check);
+        }
+    }
+
+    cout << MaxValue << '\n';
+
+    return 0;
 }
