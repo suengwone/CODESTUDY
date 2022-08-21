@@ -80,3 +80,68 @@ int main()
     
     return 0;
 }
+
+// 수 찾기 기존 풀이 참고 세번째 
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector<long long int> CheckList;
+
+int BinarySearch(int _searchNum)
+{
+    int low = 0, high = CheckList.size() - 1, mid;
+
+    while(low<=high)
+    {
+        mid = (low + high)/2;
+
+        if(CheckList[mid] == _searchNum)
+        {
+            return 1;
+        }
+        else if(CheckList[mid] > _searchNum)
+        {
+            high = mid - 1;
+        }
+        else if(CheckList[mid] < _searchNum)
+        {
+            low = mid + 1;
+        }
+    }
+
+    return 0;
+}
+
+int main()
+{
+    ios_base :: sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+
+    int N, M;
+    
+    cin >> N;
+    
+    CheckList.resize(N);
+
+    for(int i=0; i<N; i++)
+    {
+        cin >> CheckList[i];
+    }
+
+    sort(CheckList.begin(), CheckList.end());
+    CheckList.erase(unique(CheckList.begin(),CheckList.end()), CheckList.end());
+
+    cin >> M;
+
+    long long int searchNum;
+    for(int i=0; i<M; i++)
+    {
+        cin >> searchNum;
+        cout << BinarySearch(searchNum) << '\n';
+    }
+
+    return 0;
+}
