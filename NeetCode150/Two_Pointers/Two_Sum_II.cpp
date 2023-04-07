@@ -1,50 +1,25 @@
 class Solution {
 public:
-    int findNum(vector<int>& numbers, int target, int startIdx)
+    vector<int> twoSum(vector<int>& numbers, int target)
     {
-        int prevIdx = startIdx, nextIdx = numbers.size() - 1;
-        int midIdx, answer = 0;
+        int start = 0, end = numbers.size() - 1;
 
-        while(prevIdx <= nextIdx)
+        while(start < end)
         {
-            midIdx = (prevIdx + nextIdx) / 2;
-
-            if(target > numbers[midIdx])
+            if(numbers[start] + numbers[end] < target)
             {
-                prevIdx = midIdx + 1;
+                start += 1;
             }
-            else if(target < numbers[midIdx])
+            else if(numbers[start] + numbers[end] > target)
             {
-                nextIdx = midIdx - 1;
+                end -= 1;
             }
             else
             {
-                answer = midIdx;
                 break;
             }
         }
 
-        return answer;
-    }
-
-    vector<int> twoSum(vector<int>& numbers, int target)
-    {
-        int remain, findIdx;
-        vector<int> answer;
-
-        for(int i=0; i<numbers.size() - 1; i++)
-        {
-            remain = target - numbers[i];
-            findIdx = findNum(numbers, remain, i + 1);
-
-            if(findIdx != 0)
-            {
-                answer.push_back(i+1);
-                answer.push_back(findIdx+1);
-                break;
-            }
-        }
-
-        return answer;
+        return {start+1, end+1};
     }
 };
