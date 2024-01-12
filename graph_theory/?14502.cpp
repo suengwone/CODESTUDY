@@ -27,11 +27,12 @@ private:
     vector<vector<int>> board;
     int SafeCount;
     queue<point> virusPoints;
+    vector<point> blankPoints;
 
 public:
     Board(int _row, int _col);
     void InitBoard();
-    void Set3Walls();
+    void Set3Walls(int idx, int selected_cnt, vector<vector<int>> tempBoard);
     void CheckSafeArea(vector<vector<int>> _board);
     int PrintSafeCount() {return SafeCount;}
     void TimeFlow(vector<vector<int>> _tempBoard);
@@ -42,7 +43,7 @@ Board::Board(int _row, int _col)
 {
     row = _row;
     col = _col;
-    SafeCount = _row*_col;
+    SafeCount = 0;
 
     board.assign(row, vector<int>(col));
 }
@@ -59,10 +60,14 @@ void Board::InitBoard()
             {
                 virusPoints.push(point(i,j));
             }
+            else if(board[i][j] == 0)
+            {
+                blankPoints.push_back(point(i,j));
+            }
         }
     }
 
-    Set3Walls();
+    Set3Walls(0, 0, board);
 }
 
 void Board::CheckSafeArea(vector<vector<int>> _board)
@@ -80,7 +85,7 @@ void Board::CheckSafeArea(vector<vector<int>> _board)
         }
     }
 
-    if(SafeCount > count)
+    if(SafeCount < count)
     {
         SafeCount = count;
     }
@@ -88,26 +93,37 @@ void Board::CheckSafeArea(vector<vector<int>> _board)
     return;
 }
 
-void Board::Set3Walls()
+void Board::Set3Walls(int idx, int selected_cnt, vector<vector<int>> tempBoard)
 {
-    vector<vector<int>> tempBoard = board;
-    int wallCount = 0;
+    if(selected_cnt == 3)
+    {
+        TimeFlow(tempBoard);
+        return;
+    }
 
-    // 1인 벽 주변에 3개의 벽을 세움
+    if(idx >= blankPoints.size())
+        return;
+    
+    int x = blankPoints[idx].first;
+    int y = blankPoints[idx].second;
 
-    TimeFlow(tempBoard);
 
-    return;
+    tempBoard[x][y] = 1;
+    Set3Walls(idx+1, selected_cnt + 1, tempBoard);
+
+    tempBoard[x][y] = 0;
+    Set3Walls(idx+1, selected_cnt, tempBoard);
 }
 const point dir4[4] = {point(1,0), point(0,1), point(-1,0), point(0,-1),};
 
 void Board::TimeFlow(vector<vector<int>> _tempBoard)
 {
     point tempPoint;
-    while(virusPoints.empty() != true)
+    queue<point> copyVirusPoints = virusPoints;
+    while(copyVirusPoints.empty() != true)
     {
-        tempPoint = virusPoints.front();
-        virusPoints.pop();
+        tempPoint = copyVirusPoints.front();
+        copyVirusPoints.pop();
 
         for(int i=0; i<4; i++)
         {
@@ -117,8 +133,8 @@ void Board::TimeFlow(vector<vector<int>> _tempBoard)
             {
                 if(_tempBoard[tempPoint.first][tempPoint.second] == 0)
                 {
-                    _tempBoard[tempPoint.first][tempPoint.second] = 1;
-                    virusPoints.push(tempPoint);
+                    _tempBoard[tempPoint.first][tempPoint.second] = 2;
+                    copyVirusPoints.push(tempPoint);
                 }
             }
 
@@ -131,21 +147,18 @@ void Board::TimeFlow(vector<vector<int>> _tempBoard)
 
 Board::~Board()
 {
-
+    
 }
 
 int main()
 {
-    for(int i=0; i<3; i++)
-    {
-        cin>>N>>M;
+    cin>>N>>M;
 
-        Board newBoard(N,M);
+    Board newBoard(N,M);
 
-        newBoard.InitBoard();
+    newBoard.InitBoard();
 
-        cout << newBoard.PrintSafeCount() << '\n';
-    }
+    cout << newBoard.PrintSafeCount() << '\n';
     
     return 0;
 }
