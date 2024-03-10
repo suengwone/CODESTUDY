@@ -36,6 +36,7 @@ int main()
     while(T--)
     {
         cin >> N >> K;
+        
         buildTime.clear();
         buildTree.clear();
         dp.clear();
@@ -49,9 +50,6 @@ int main()
             cin >> buildTime[i];
         }
 
-
-        int maxIdx = 0;
-        bool isAsc = false;
         for(int i=0; i<K; i++)
         {
             int first, second;
